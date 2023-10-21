@@ -2,7 +2,7 @@ const axios = require('axios');
 const cheerio = require('cheerio');
 const OpenAI = require('openai').default;
 require('dotenv').config();
-const Recruit = require('../model/Recruit');
+const Recruit = require('../model/recruit');
 const openai = new OpenAI({ api_key: process.env.OPENAI_API_KEY });
 
 

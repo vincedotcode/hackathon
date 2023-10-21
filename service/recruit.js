@@ -3,7 +3,7 @@ const fs = require('fs');
 const path = require('path');
 const OpenAI = require('openai').default;
 require('dotenv').config();
-const Recruit = require('../model/Recruit');
+const Recruit = require('../model/recruit');
 const openai = new OpenAI({ api_key: process.env.OPENAI_API_KEY });
 
 
