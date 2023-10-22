@@ -54,10 +54,11 @@ const mapToSchema = (data) => {
       return;
   }
 
-  let fullName, address, phone, professionalSummary, workExperiences = [], educations = [], skills = [], hobbies = [];
+  let fullName, email, address, phone, professionalSummary, workExperiences = [], educations = [], skills = [], hobbies = [];
 
   for (let i = 0; i < lines.length; i++) {
       if (lines[i].startsWith("Name:")) fullName = lines[i].replace("Name:", "").trim();
+      if (lines[i].startsWith("Email:")) email = lines[i].split(":")[1].trim();
       if (lines[i].startsWith("Address:")) address = lines[i].split(":")[1].trim();
       if (lines[i].startsWith("Phone:")) phone = lines[i].split(":")[1].trim();
       if (lines[i].startsWith("Work Experience:")) {
@@ -110,6 +111,7 @@ const mapToSchema = (data) => {
   return {
       fullName,
       contact: {
+          email,
           address,
           phone
       },
@@ -125,19 +127,6 @@ const mapToSchema = (data) => {
 
 
 
-const saveToDatabase = async (cvData) => {
-  const analysisResult = await mapResultToProperData(cvData);
-  console.log("Mapped Data: ", analysisResult)
-  const mappedData = mapToSchema(analysisResult);
-  const recruitInstance = new Recruit(mappedData);
-  try {
-    await recruitInstance.save();
-    console.log('Data saved successfully!');
-  } catch (err) {
-    console.error('Error saving data:', err);
-    throw err;
-  }
-};
 
 const getAllRecruits = async () => {
   try {
@@ -164,6 +153,19 @@ const getRecruitById = async (id) => {
 };
 
 
+const saveToDatabase = async (cvData) => {
+  try {
+    const analysisResult = await mapResultToProperData(cvData);
+    const mappedData = mapToSchema(analysisResult);
+    if (!mappedData) throw new Error("Mapped data is null or undefined");
+    const recruitInstance = new Recruit(mappedData);
+    await recruitInstance.save();
+    console.log('Data saved successfully!');
+  } catch (err) {
+    console.error('Error:', err);
+    throw err;
+  }
+};
 
 
 module.exports = {
